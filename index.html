@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+     crossorigin=""/>
+    <script
+    src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+ integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+ crossorigin=""></script>
+    <style>
+           
+        </style>
+</head>
+<body>
+        <a href="#" onClick="prompt('What is your name?')">Click me</a>
+    <div id="status"></div>
+        <div id="mapid" style=" height: 100vh; width: 600px"></div>
+ <script >
+ 
+ 
+ var mymap = L.map('mapid')
+ .setView([-15.7107917, -47.9131917], 13);
+
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 18,
+}).addTo(mymap);
+
+
+var marker = L.marker([-15.709925, -47.911388]).addTo(mymap);
+marker.bindPopup("<b>ponto de onibus.</b><br>").openPopup();
+
+var circle = L.circle([-15.709925, -47.911388], {
+	color: 'red',
+	fillColor: '#f03',
+	fillOpacity: 0.5,
+	radius: 50
+}).addTo(mymap);
+
+circle.bindPopup("range da parada");
+
+var popup = L.popup();
+
+function onMapClick(e) {
+	popup
+		.setLatLng(e.latlng)
+		.setContent("You clicked the map at " + e.latlng.toString())
+		.openOn(mymap);
+}
+
+mymap.on('click', onMapClick);
+
+
+// localização do usuario em tempo real 
+if('geolocation' in navigator ){
+                const watcher = navigator.geolocation.watchPosition(function(position){
+                    //informa a latitude e a longitude
+                    console.log(position.coords.latitude,position.coords.longitude);
+                    if(position.coords.latitude >= -15.710095 &&position.coords.longitude>= -47.911511 || position.coords.latitude >= -15.709744 &&position.coords.longitude>= -47.911538 || position.coords.latitude >= -15.709708 &&position.coords.longitude>= -47.911243 || position.coords.latitude >= -15.709992 &&position.coords.longitude>= -47.911237){
+                        document.getElementById("status").innerHTML = "<h1>estou na parada</h1>"
+                    }else{
+                        document.getElementById("status").innerHTML = "<h1>nao estou na parada</h1>"
+                    }
+                } ,function(error){
+                    console.log(error);
+                }, {enableHighAccuracy:true,maximumAge:3000, timeout:3000})
+                
+            }else{
+                alert('ops nao foi possivel pegar a localização');
+            }
+ </script>
+    
+
+ 
+
+
+</body>
+</html>
